@@ -8,6 +8,7 @@ import { useState, useEffect } from 'react';
 
 const AssetForm = ({ imageUri }) => {
   const [selectedImage, setSelectedImage] = useState(null);
+  console.log(imageUri)
 
   useEffect(() => {
     // Set the passed image URI as the selected image when the component mounts
