@@ -10,14 +10,14 @@ import DesktopUploadAlert from "./upload/desk";
 import { InstagramLogoIcon } from "@radix-ui/react-icons";
 import { Mail, Instagram, Twitter, Wallet, Copy, Check } from "lucide-react";
 import { SocialDropdown } from "@/components/dropdown";
-import { useWalletState } from "@/wallet-provider/aptos-wallet-provider";
+import { useWalletContext } from "@/privy/walletContext";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [copied, setCopied] = useState(false);
-  const { connected, accountAddress } = useWalletState();
+  const { connected, accountAddress } = useWalletContext();
 
   const socialLinks = [
     { icon: Mail, href: "mailto:0xswayam@gmail.com", label: "Email" },

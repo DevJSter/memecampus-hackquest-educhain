@@ -1,7 +1,6 @@
 import { Poppins } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/modules/navbar";
-import AptosWalletProvider from "@/wallet-provider/aptos-wallet-provider";
 import PrivyWrapper from "@/privy/privyProvider";
 import ConnectWallet from "@/components/wallet-checker";
 
