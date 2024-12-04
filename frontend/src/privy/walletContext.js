@@ -31,7 +31,8 @@ export const WalletProvider = ({ children }) => {
           const signer = await provider.getSigner();
           const address = w0.address;
 
-          setWalletDetails({
+          console.log(signer);
+        setWalletDetails({
             signer,
             w0,
             address,

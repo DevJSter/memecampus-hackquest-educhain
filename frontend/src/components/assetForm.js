@@ -1,13 +1,20 @@
 'use client';
-import React, { useState } from 'react';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { Label } from '@/components/ui/label';
-import { Upload } from 'lucide-react';
 
-const AssetForm = () => {
+import { Card, CardContent } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Button } from "@/components/ui/button";
+import { useState, useEffect } from 'react';
+
+const AssetForm = ({ imageUri }) => {
   const [selectedImage, setSelectedImage] = useState(null);
+
+  useEffect(() => {
+    // Set the passed image URI as the selected image when the component mounts
+    if (imageUri) {
+      setSelectedImage(imageUri);
+    }
+  }, [imageUri]);
 
   const handleImageChange = (event) => {
     const file = event.target.files[0];
@@ -19,7 +26,7 @@ const AssetForm = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     // Handle form submission logic here
-    console.log('Form submitted');
+    console.log('Form submitted with image:', selectedImage);
   };
 
   return (
@@ -29,35 +36,20 @@ const AssetForm = () => {
           <div>
             <Label className="text-sm text-gray-600 mb-2">Asset Image</Label>
             <div className="text-xs text-gray-500 mb-2">
-              Uploads asset to a decentralized storage
+              Uploaded meme will be used as asset image
             </div>
             <div className="mt-1">
-              <label className="cursor-pointer">
-                <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center hover:border-gray-400 transition-colors">
-                  <input
-                    type="file"
-                    className="hidden"
-                    onChange={handleImageChange}
-                    accept="image/*"
-                  />
-                  <Button 
-                    type="button" 
-                    variant="outline"
-                    className="mb-2"
-                  >
-                    Choose Image
-                  </Button>
-                  {selectedImage && (
-                    <div className="mt-2">
-                      <img
-                        src={selectedImage}
-                        alt="Selected"
-                        className="max-h-40 mx-auto"
-                      />
-                    </div>
-                  )}
-                </div>
-              </label>
+              <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center">
+                {selectedImage && (
+                  <div className="mt-2">
+                    <img
+                      src={selectedImage}
+                      alt="Selected"
+                      className="max-h-40 mx-auto"
+                    />
+                  </div>
+                )}
+              </div>
             </div>
           </div>
 

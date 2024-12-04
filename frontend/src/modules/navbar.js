@@ -17,7 +17,10 @@ import { toast } from "sonner";
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [copied, setCopied] = useState(false);
-  const { connected, accountAddress } = useWalletContext();
+  const { connected, address } = useWalletContext();
+
+  // console.log(connected);
+  console.log(address);
 
   const socialLinks = [
     { icon: Mail, href: "mailto:0xswayam@gmail.com", label: "Email" },
@@ -41,7 +44,7 @@ const Navbar = () => {
   const copyToClipboard = async () => {
     if (!accountAddress) return;
     try {
-      await navigator.clipboard.writeText(accountAddress);
+      await navigator.clipboard.writeText(address);
       setCopied(true);
       toast.success("Address copied to clipboard");
       setTimeout(() => setCopied(false), 2000);
@@ -61,7 +64,7 @@ const Navbar = () => {
 
           <div className="flex items-center gap-4">
             <SocialDropdown />
-            {connected && accountAddress && (
+            {  address && (
               <button 
                 onClick={copyToClipboard}
                 className={cn(
@@ -71,7 +74,7 @@ const Navbar = () => {
                 )}
               >
                 <Wallet className="h-4 w-4" />
-                <span>{formatAddress(accountAddress)}</span>
+                <span>{formatAddress(address)}</span>
                 {copied ? (
                   <Check className="h-3.5 w-3.5 text-green-600" />
                 ) : (

@@ -1,12 +1,17 @@
-"use client";
-
+'use client';
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Upload } from 'lucide-react';
 import * as React from "react";
 import { useRouter } from "next/navigation";
 import { cva } from "class-variance-authority";
 import { cn } from "@/lib/utils";
-import { Download, Edit } from "lucide-react";
+import { Download, Edit, X } from "lucide-react";
 import { Button } from "./ui/button";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
+import AssetForm from "./assetForm";
 
 const memeGridVariants = cva("max-w-4xl md:max-w-6xl px-2", {
   variants: {
@@ -39,6 +44,7 @@ const memeItemVariants = cva("break-inside-avoid", {
 const MemeCard = ({ memeId, index, type }) => {
   const router = useRouter();
   const [imageLoaded, setImageLoaded] = React.useState(false);
+  const [showModal, setShowModal] = React.useState(false);
 
   const handleDownload = async () => {
     try {
@@ -68,46 +74,70 @@ const MemeCard = ({ memeId, index, type }) => {
   };
 
   return (
-    <div
-      className={`relative border-2 border-border bg-white shadow-none hover:shadow-light rounded-xl p-3`}
-    >
-      {!imageLoaded && (
-        <div className="w-full h-48 bg-white border rounded-lg flex items-center justify-center">
-          <span className="font-semibold">
-            <DotLottieReact src="/loading-animation.lottie" loop autoplay />
-          </span>
+    <>
+      <div
+        className={`relative border-2 border-border bg-white shadow-none hover:shadow-light rounded-xl p-3`}
+      >
+        {!imageLoaded && (
+          <div className="w-full h-48 bg-white border rounded-lg flex items-center justify-center">
+            <span className="font-semibold">
+              <DotLottieReact src="/loading-animation.lottie" loop autoplay />
+            </span>
+          </div>
+        )}
+        <img
+          src={`${memeId.uri}`}
+          alt={`Meme image ${memeId}`}
+          className={`w-full h-auto rounded-lg border ${
+            imageLoaded ? "" : "hidden"
+          }`}
+          onLoad={() => setImageLoaded(true)}
+        />
+        <div className="mt-2 text-center font-bold text-shadow capitalize">
+          {memeId?.title?.length > 20
+            ? `${memeId?.title?.slice(0, 20)}...`
+            : memeId?.title}
         </div>
-      )}
-      <img
-        src={`${memeId.uri}`}
-        alt={`Meme image ${memeId}`}
-        className={`w-full h-auto rounded-lg border ${
-          imageLoaded ? "" : "hidden"
-        }`}
-        onLoad={() => setImageLoaded(true)}
-      />
-      <div className="mt-2 text-center font-bold text-shadow capitalize">
-        {memeId?.title?.length > 20
-          ? `${memeId?.title?.slice(0, 20)}...`
-          : memeId?.title}
-      </div>
-      <div className="absolute top-5 right-5 flex space-x-2">
-        <Button
-          onClick={handleDownload}
-          className="p-2 rounded-full text-white shadow-md hover:bg-gray-100 transition-colors duration-200 hover:bg-main/70 hover:translate-x-0 hover:translate-y-0"
-          aria-label="Download meme"
+        <div className="absolute top-5 right-5 flex space-x-2">
+          <Button
+            onClick={handleDownload}
+            className="p-2 rounded-full text-white shadow-md hover:bg-gray-100 transition-colors duration-200 hover:bg-main/70 hover:translate-x-0 hover:translate-y-0"
+            aria-label="Download meme"
+          >
+            <Download size={20} />
+          </Button>
+          <Button
+            onClick={handleEdit}
+            className="p-2 rounded-full text-white shadow-md hover:bg-gray-100 transition-colors duration-200 hover:bg-main/70 hover:translate-x-0 hover:translate-y-0"
+            aria-label="Edit meme"
+          >
+            <Edit size={20} />
+          </Button>
+        </div>
+        <Button 
+          onClick={() => setShowModal(true)}
+          className="w-full mt-3 text-white"
         >
-          <Download size={20} />
-        </Button>
-        <Button
-          onClick={handleEdit}
-          className="p-2 rounded-full text-white shadow-md hover:bg-gray-100 transition-colors duration-200 hover:bg-main/70 hover:translate-x-0 hover:translate-y-0"
-          aria-label="Edit meme"
-        >
-          <Edit size={20} />
+          Inscribe this Meme
         </Button>
       </div>
-    </div>
+
+      <Dialog open={showModal} onOpenChange={setShowModal}>
+        <DialogContent className="sm:max-w-[600px] h-[90vh] overflow-y-auto">
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-xl font-semibold">Create Fungible Asset</h2>
+            <Button
+              variant="ghost"
+              className="h-8 w-8 p-0"
+              onClick={() => setShowModal(false)}
+            >
+              <X className="h-4 w-4" />
+            </Button>
+          </div>
+          <AssetForm image={memeId.uri} />
+        </DialogContent>
+      </Dialog>
+    </>
   );
 };
 
@@ -120,9 +150,6 @@ export const MemeGrid = ({ memes, columns, spacing, className, type }) => {
           className={cn(memeItemVariants({ spacing }))}
         >
           <MemeCard memeId={memeId} index={i} type={type} />
-                    <Button className='text-white'>
-                  Inscribe the Meme
-            </Button>
         </div>
       ))}
     </div>
